@@ -21,7 +21,7 @@ def get_env_variable(name):
     if not value:
         print(f"Error: {name} environment variable is not set", file=sys.stderr)
         sys.exit(1)
-    return value
+    return value.strip() 
 
 
 def generate_timestamp():
@@ -56,7 +56,7 @@ def submit_application(payload, signature):
     url = "https://b12.io/apply/submission"
     headers = {
         "Content-Type": "application/json",
-        "X-Signature-256": signature
+        "X-Signature-256": f"sha256={signature}"
     }
     
     try:
@@ -74,6 +74,9 @@ def main():
     
     # Get configuration from environment variables
     secret = get_env_variable("B12_SECRET")
+    print(f"Secret length: {len(secret)} characters")
+    print(f"Secret starts with: {secret[:4]}...")
+    
     name = get_env_variable("B12_NAME")
     email = get_env_variable("B12_EMAIL")
     resume_link = get_env_variable("B12_RESUME_LINK")
